@@ -3,12 +3,9 @@
 // |              Pro Input JS              |
 // |  https://github.com/mehdika2/ProInput  |
 // +========================================+
+
 (function () {
     function ProInputInit(onLastInputEnter) {
-        const persianNumbers = ['\u06F0', '\u06F1', '\u06F2', '\u06F3', '\u06F4', '\u06F5', '\u06F6', '\u06F7', '\u06F8', '\u06F9'];
-        const arabicNumbers = ['\u0660', '\u0661', '\u0662', '\u0663', '\u0664', '\u0665', '\u0666', '\u0667', '\u0668', '\u0669'];
-        const englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-
         const itype = "data-pi-type";
         const imaxlength = "data-pi-max-length";
 
@@ -93,41 +90,49 @@
             return true;
         }
 
-        function toEnglishNumber(input) {
-            persianNumbers.forEach((num, index) => {
-                input.value = input.value.replace(new RegExp(num, 'g'), englishNumbers[index]);
-            });
-            arabicNumbers.forEach((num, index) => {
-                input.value = input.value.replace(new RegExp(num, 'g'), englishNumbers[index]);
-            });
-        }
-        function toPersionNumber(input) {
-            englishNumbers.forEach((num, index) => {
-                input.value = input.value.replace(new RegExp(num, 'g'), persianNumbers[index]);
-            });
-            arabicNumbers.forEach((num, index) => {
-                input.value = input.value.replace(new RegExp(num, 'g'), persianNumbers[index]);
-            });
-        }
-        function toArabicNumber(input) {
-            englishNumbers.forEach((num, index) => {
-                input.value = input.value.replace(new RegExp(num, 'g'), arabicNumbers[index]);
-            });
-            persianNumbers.forEach((num, index) => {
-                input.value = input.value.replace(new RegExp(num, 'g'), arabicNumbers[index]);
-            });
+        function setCursorToEnd(input) {
+            const valueLength = input.value.length;
+            input.setSelectionRange(valueLength, valueLength);
+            input.focus();
         }
     }
 
-    function setCursorToEnd(input) {
-        const valueLength = input.value.length;
-        input.setSelectionRange(valueLength, valueLength);
-        input.focus();
+    const persianNumbers = ['\u06F0', '\u06F1', '\u06F2', '\u06F3', '\u06F4', '\u06F5', '\u06F6', '\u06F7', '\u06F8', '\u06F9'];
+    const englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const arabicNumbers = ['\u0660', '\u0661', '\u0662', '\u0663', '\u0664', '\u0665', '\u0666', '\u0667', '\u0668', '\u0669'];
+
+    function toPersionNumber(input) {
+        englishNumbers.forEach((num, index) => {
+            input.value = input.value.replace(new RegExp(num, 'g'), persianNumbers[index]);
+        });
+        arabicNumbers.forEach((num, index) => {
+            input.value = input.value.replace(new RegExp(num, 'g'), persianNumbers[index]);
+        });
+    }
+    function toEnglishNumber(input) {
+        persianNumbers.forEach((num, index) => {
+            input.value = input.value.replace(new RegExp(num, 'g'), englishNumbers[index]);
+        });
+        arabicNumbers.forEach((num, index) => {
+            input.value = input.value.replace(new RegExp(num, 'g'), englishNumbers[index]);
+        });
+    }
+    function toArabicNumber(input) {
+        englishNumbers.forEach((num, index) => {
+            input.value = input.value.replace(new RegExp(num, 'g'), arabicNumbers[index]);
+        });
+        persianNumbers.forEach((num, index) => {
+            input.value = input.value.replace(new RegExp(num, 'g'), arabicNumbers[index]);
+        });
     }
 
     function submit() {
         document.querySelector("form").submit();
     }
+
     window.submit = submit;
     window.ProInputInit = ProInputInit;
+    window.toPersian = toPersionNumber;
+    window.toEnglish = toEnglishNumber;
+    window.toArabic = toArabicNumber;
 })();
