@@ -16,8 +16,10 @@
 Create your input elements with your types:
 ``` html
 <!--
-n: set type to number and prevent enter characters
-f: persian characters only and convert other to persian ('e' for english, 'a' for arabic)
+n{format: not required}: set type to number and prevent enter characters (farsi input example "nf")
+  - f: farsi digits only and convert other digits to farsi
+  - e: english digits only and convert other digits to english
+  - a: arabic digits only and convert other digits to arabic
 s: separate three digits numbers
 b: jump previous input if press `Backspace` and input was empty
 j: jump next input of press `Enter` and prevent submit event
