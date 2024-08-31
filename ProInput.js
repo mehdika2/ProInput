@@ -7,6 +7,7 @@
 (function () {
     function ProInputInit(onLastInputEnter) {
         const itype = "data-pi-type";
+        const iallowedcharacters = "data-pi-allowed";
         const imaxlength = "data-pi-max-length";
 
         const inputs = document.querySelectorAll('input');
@@ -14,12 +15,14 @@
         inputs.forEach((input, index) => {
             input.tabIndex = index + 1;
 
-            if (findAttribute(input, "n"))
+            if (findAttribute(input, "onlynumber"))
+                input.addEventListener("input", formatOnlyNumberInput);
+            else if (findAttribute(input, "number"))
                 input.addEventListener("input", formatNumberInput);
 
-            if (findAttribute(input, "b") || findAttribute(input, "j"))
+            if (findAttribute(input, "backjump") || findAttribute(input, "jump"))
                 input.addEventListener('keydown', (event) => {
-                    if (findAttribute(input, "b") && event.key === 'Backspace' && input.value === '') {
+                    if (findAttribute(input, "backjump") && event.key === 'Backspace' && input.value === '') {
                         if (index > 0) {
                             const prevInput = inputs[index - 1];
                             prevInput.focus();
@@ -27,7 +30,7 @@
                             event.preventDefault();
                         }
                     }
-                    if (findAttribute(input, "j") && (event.key === 'Enter' || event.keyCode === 13)) {
+                    if (findAttribute(input, "jump") && (event.key === 'Enter' || event.keyCode === 13)) {
                         event.preventDefault();
                         const nextInput = inputs[index + 1];
                         if (nextInput) {
@@ -47,18 +50,25 @@
                 });
         });
 
+        function formatOnlyNumberInput(event) {
+            let input = event.target;
+            let allowedChars = input.getAttribute(iallowedcharacters) ?? "";
+            input.value = input.value.replaceAll(new RegExp(`[^\\u06F0-\\u06F9\\u0660-\\u06690-9${allowedChars}]`, "g"), "");
+
+            formatNumberInput(event);
+        }
+
         function formatNumberInput(event) {
             let input = event.target;
-            input.value = input.value.replaceAll(/[^\u06F0-\u06F9\u0660-\u06690-9]/g, "");
 
-            if (findAttribute(input, "f"))
+            if (findAttribute(input, "farsi"))
                 toPersionNumber(input);
-            else if (findAttribute(input, "a"))
+            else if (findAttribute(input, "arabic"))
                 toArabicNumber(input);
-            else if (findAttribute(input, "e"))
+            else if (findAttribute(input, "english"))
                 toEnglishNumber(input);
 
-            if (findAttribute(input, "s"))
+            if (findAttribute(input, "separate"))
                 input.value = separateDigits(input.value);
 
             if (input.hasAttribute(imaxlength) && input.value.replaceAll(',', '').length >= Number(input.getAttribute(imaxlength))) {
