@@ -85,6 +85,7 @@
         }
 
         function separateDigits(value) {
+            value = value.replaceAll(',', '');
             value = [...value].reverse().join("");
             value = value.replace(/(.{3})/g, '$1,').replace(/,\s*$/, '');
             value = [...value].reverse().join("");
