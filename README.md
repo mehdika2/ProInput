@@ -16,17 +16,24 @@
 Create your input elements with your types:
 ``` html
 <!--
-n{format: not required}: set type to number and prevent enter characters (farsi input example "nf")
-  - f: farsi digits only and convert other digits to farsi
-  - e: english digits only and convert other digits to english
-  - a: arabic digits only and convert other digits to arabic
-s: separate three digits numbers
-b: jump previous input if press `Backspace` and input was empty
-j: jump next input of press `Enter` and prevent submit event
+Types:
+  - number: this is required for converting digits to farsi or english
+  - onlynumber: prevent entering non-numeric characters
+  - separate: separate three digits numbers
 
-max length: if input text characters reach to 10 it will focus on next input if exists
+  - farsi: farsi digits only and convert other digits to farsi
+  - english: english digits only and convert other digits to english
+  - arabic: arabic digits only and convert other digits to arabic
+
+  - backjump: jump previous input if press `Backspace` and input was empty
+  - jump: jump next input of press `Enter` and prevent submit event
+
+attributes:
+  - max length: if input text characters reach to 10 it will focus on next input if exists
+  - allowed: set allowed characters for 
  -->
-<input type="tel" data-pi-type="nfsbj" data-pi-max-length="10" />
+<input type="tel" id="age" data-pi-type="number farsi separate" data-pi-max-length="10" />
+<input type="tel" id="date" data-pi-type="onlynumber farsi separate" data-pi-max-length="10" data-pi-allowed="/" />
 ```
 
 Initialize:
