@@ -5,12 +5,29 @@
 // +========================================+
 
 (function () {
-    function ProInputInit(onLastInputEnter) {
-        const itype = "data-pi-type";
-        const iallowedcharacters = "data-pi-allowed";
-        const imaxlength = "data-pi-max-length";
+    const itype = "data-pi-type";
+    const iallowedcharacters = "data-pi-allowed";
+    const imaxlength = "data-pi-max-length";
 
+    function ProInputInit(onLastInputEnter) {
+
+        const forms = document.querySelectorAll('form');
         const inputs = document.querySelectorAll('input');
+
+        const eventedForms = [];
+
+        forms.forEach((form, index) => {
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+                if (findAttribute(form, ".format"))
+                    if (findAttribute(form, "farsi"))
+                        toPersionNumber(form);
+                    else if (findAttribute(form, "arabic"))
+                        toArabicNumber(form);
+                    else if (findAttribute(form, "english"))
+                        toEnglishNumber(form);
+            });
+        });
 
         inputs.forEach((input, index) => {
             input.tabIndex = index + 1;
@@ -36,15 +53,13 @@
                         if (nextInput) {
                             nextInput.focus();
                         } else {
-                            if (typeof onLastInputEnter === 'function') {
-                                if (onLastInputEnter() == true)
+                            if (typeof onLastInputEnter === 'function')
+                                if (onLastInputEnter() == false)
                                     form.submit();
-                            } else {
-                                const form = input.closest('form');
-                                if (form) {
-                                    form.submit();
+                                else {
+                                    if (form)
+                                        form.submit();
                                 }
-                            }
                         }
                     }
                 });
@@ -92,15 +107,6 @@
             return value;
         }
 
-        function findAttribute(input, value, attrTarget = "") {
-            if (attrTarget == "") attrTarget = itype;
-            let attribute = input.getAttribute(attrTarget);
-            if (!attribute) return false;
-            let index = attribute.indexOf(value);
-            if (index < 0) return false;
-            return true;
-        }
-
         function setCursorToEnd(input) {
             const valueLength = input.value.length;
             input.setSelectionRange(valueLength, valueLength);
@@ -108,33 +114,71 @@
         }
     }
 
+    function findAttribute(input, value, attrTarget = "") {
+        if (attrTarget == "") attrTarget = itype;
+        let attribute = input.getAttribute(attrTarget);
+        if (!attribute) return false;
+        let index = attribute.indexOf(value);
+        if (index < 0) return false;
+        return true;
+    }
+
     const persianNumbers = ['\u06F0', '\u06F1', '\u06F2', '\u06F3', '\u06F4', '\u06F5', '\u06F6', '\u06F7', '\u06F8', '\u06F9'];
     const englishNumbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
     const arabicNumbers = ['\u0660', '\u0661', '\u0662', '\u0663', '\u0664', '\u0665', '\u0666', '\u0667', '\u0668', '\u0669'];
 
-    function toPersionNumber(input) {
-        englishNumbers.forEach((num, index) => {
-            input.value = input.value.replace(new RegExp(num, 'g'), persianNumbers[index]);
-        });
-        arabicNumbers.forEach((num, index) => {
-            input.value = input.value.replace(new RegExp(num, 'g'), persianNumbers[index]);
-        });
+    function toPersionNumber(node) {
+        if (node.nodeName === "FORM")
+            node.querySelectorAll(`input`).forEach((input, index) => {
+                if (findAttribute(input, ".format"))
+                    toPersionNumber(input);
+                if (findAttribute(input, ".noseparator"))
+                    input.value = input.value.replaceAll(",", "");
+            });
+        else {
+            englishNumbers.forEach((num, index) => {
+                node.value = node.value.replace(new RegExp(num, 'g'), persianNumbers[index]);
+            });
+            arabicNumbers.forEach((num, index) => {
+                node.value = node.value.replace(new RegExp(num, 'g'), persianNumbers[index]);
+            });
+        }
     }
-    function toEnglishNumber(input) {
-        persianNumbers.forEach((num, index) => {
-            input.value = input.value.replace(new RegExp(num, 'g'), englishNumbers[index]);
-        });
-        arabicNumbers.forEach((num, index) => {
-            input.value = input.value.replace(new RegExp(num, 'g'), englishNumbers[index]);
-        });
+
+    function toEnglishNumber(node) {
+        if (node.nodeName === "FORM")
+            node.querySelectorAll(`input`).forEach((input, index) => {
+                if (findAttribute(input, ".format"))
+                    toEnglishNumber(input);
+                if (findAttribute(input, ".noseparator"))
+                    input.value = input.value.replaceAll(",", "");
+            });
+        else {
+            persianNumbers.forEach((num, index) => {
+                node.value = node.value.replace(new RegExp(num, 'g'), englishNumbers[index]);
+            });
+            arabicNumbers.forEach((num, index) => {
+                node.value = node.value.replace(new RegExp(num, 'g'), englishNumbers[index]);
+            });
+        }
     }
-    function toArabicNumber(input) {
-        englishNumbers.forEach((num, index) => {
-            input.value = input.value.replace(new RegExp(num, 'g'), arabicNumbers[index]);
-        });
-        persianNumbers.forEach((num, index) => {
-            input.value = input.value.replace(new RegExp(num, 'g'), arabicNumbers[index]);
-        });
+
+    function toArabicNumber(node) {
+        if (node.nodeName === "FORM")
+            node.querySelectorAll(`input`).forEach((input, index) => {
+                if (findAttribute(input, ".format"))
+                    toArabicNumber(input);
+                if (findAttribute(input, ".noseparator"))
+                    input.value = input.value.replaceAll(",", "");
+            });
+        else {
+            englishNumbers.forEach((num, index) => {
+                node.value = node.value.replace(new RegExp(num, 'g'), arabicNumbers[index]);
+            });
+            persianNumbers.forEach((num, index) => {
+                node.value = node.value.replace(new RegExp(num, 'g'), arabicNumbers[index]);
+            });
+        }
     }
 
     function submit() {
