@@ -10,27 +10,25 @@
     const imaxlength = "data-pi-max-length";
 
     function ProInputInit(onLastInputEnter) {
-
-        const forms = document.querySelectorAll('form');
         const inputs = document.querySelectorAll('input');
 
         const eventedForms = [];
 
-        forms.forEach((form, index) => {
-            form.addEventListener("submit", function (event) {
-                event.preventDefault();
-                if (findAttribute(form, ".format"))
-                    if (findAttribute(form, "farsi"))
-                        toPersionNumber(form);
-                    else if (findAttribute(form, "arabic"))
-                        toArabicNumber(form);
-                    else if (findAttribute(form, "english"))
-                        toEnglishNumber(form);
-            });
-        });
-
         inputs.forEach((input, index) => {
             input.tabIndex = index + 1;
+
+            const form = input.closest("form");
+
+            let attributeString = input.getAttribute(itype);
+            if (attributeString != undefined && input.getAttribute(itype).match(/\..*?\s/g) && !eventedForms.includes(form)) {
+                form.addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    toPersionNumber(form);
+                    toEnglishNumber(form);
+                    toArabicNumber(form);
+                });
+                eventedForms.push(form);
+            }
 
             if (findAttribute(input, "onlynumber"))
                 input.addEventListener("input", formatOnlyNumberInput);
@@ -118,9 +116,8 @@
         if (attrTarget == "") attrTarget = itype;
         let attribute = input.getAttribute(attrTarget);
         if (!attribute) return false;
-        let index = attribute.indexOf(value);
-        if (index < 0) return false;
-        return true;
+        if (attribute.split(' ').includes(value)) return true;
+        return false;
     }
 
     const persianNumbers = ['\u06F0', '\u06F1', '\u06F2', '\u06F3', '\u06F4', '\u06F5', '\u06F6', '\u06F7', '\u06F8', '\u06F9'];
@@ -130,7 +127,7 @@
     function toPersionNumber(node) {
         if (node.nodeName === "FORM")
             node.querySelectorAll(`input`).forEach((input, index) => {
-                if (findAttribute(input, ".format"))
+                if (findAttribute(input, ".farsi"))
                     toPersionNumber(input);
                 if (findAttribute(input, ".noseparator"))
                     input.value = input.value.replaceAll(",", "");
@@ -148,7 +145,7 @@
     function toEnglishNumber(node) {
         if (node.nodeName === "FORM")
             node.querySelectorAll(`input`).forEach((input, index) => {
-                if (findAttribute(input, ".format"))
+                if (findAttribute(input, ".english"))
                     toEnglishNumber(input);
                 if (findAttribute(input, ".noseparator"))
                     input.value = input.value.replaceAll(",", "");
@@ -166,7 +163,7 @@
     function toArabicNumber(node) {
         if (node.nodeName === "FORM")
             node.querySelectorAll(`input`).forEach((input, index) => {
-                if (findAttribute(input, ".format"))
+                if (findAttribute(input, ".arabic"))
                     toArabicNumber(input);
                 if (findAttribute(input, ".noseparator"))
                     input.value = input.value.replaceAll(",", "");
