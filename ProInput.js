@@ -3,7 +3,6 @@
 // |              Pro Input JS              |
 // |  https://github.com/mehdika2/ProInput  |
 // +========================================+
-
 (function () {
     const itype = "data-pi-type";
     const iallowedcharacters = "data-pi-allowed";
@@ -22,7 +21,6 @@
             let attributeString = input.getAttribute(itype);
             if (attributeString != undefined && input.getAttribute(itype).match(/\..*?\s/g) && !eventedForms.includes(form)) {
                 form.addEventListener("submit", function (e) {
-                    e.preventDefault();
                     toPersionNumber(form);
                     toEnglishNumber(form);
                     toArabicNumber(form);
