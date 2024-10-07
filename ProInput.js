@@ -82,7 +82,11 @@
             if (findAttribute(input, "separate"))
                 input.value = separateDigits(input.value);
 
-            if (input.hasAttribute(imaxlength) && input.value.replaceAll(',', '').length >= Number(input.getAttribute(imaxlength))) {
+            if (input.hasAttribute(imaxlength) &&
+                (findAttribute(input, "separate")
+                    ? input.value.replaceAll(',', '').length >= Number(input.getAttribute(imaxlength))
+                    : input.value.length >= Number(input.getAttribute(imaxlength)))) {
+                input.value = input.value.substring(0, input.value.length - 1);
                 const nextInput = inputs[input.tabIndex];
                 if (nextInput) {
                     nextInput.focus();
