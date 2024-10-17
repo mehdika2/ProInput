@@ -13,25 +13,33 @@
 
         const eventedForms = [];
 
+        const originalSubmit = HTMLFormElement.prototype.submit;
+        HTMLFormElement.prototype.submit = function () {
+            eventedForms.forEach(function (form) {
+                toPersionNumber(form);
+                toEnglishNumber(form);
+                toArabicNumber(form);
+            });
+            originalSubmit.call(this);
+        };
+
         inputs.forEach((input, index) => {
             input.tabIndex = index + 1;
 
             const form = input.closest("form");
 
             let attributeString = input.getAttribute(itype);
-            if (attributeString != undefined && input.getAttribute(itype).match(/\..*?\s/g) && !eventedForms.includes(form)) {
-                form.addEventListener("submit", function (e) {
-                    toPersionNumber(form);
-                    toEnglishNumber(form);
-                    toArabicNumber(form);
-                });
+            if (attributeString != undefined && input.getAttribute(itype).match(/\.\w+/g) && !eventedForms.includes(form))
                 eventedForms.push(form);
-            }
 
-            if (findAttribute(input, "onlynumber"))
+            if (findAttribute(input, "onlynumber")) {
                 input.addEventListener("input", formatOnlyNumberInput);
-            else if (findAttribute(input, "number"))
+                formatNumberInput({ target: input });
+            }
+            else if (findAttribute(input, "number")) {
                 input.addEventListener("input", formatNumberInput);
+                formatNumberInput({ target: input });
+            }
 
             if (findAttribute(input, "backjump") || findAttribute(input, "jump"))
                 input.addEventListener('keydown', (event) => {
@@ -72,6 +80,9 @@
         function formatNumberInput(event) {
             let input = event.target;
 
+            const selectionEnd = input.selectionEnd;
+            const inputLenght = input.value.length;
+
             if (findAttribute(input, "farsi"))
                 toPersionNumber(input);
             else if (findAttribute(input, "arabic"))
@@ -93,10 +104,9 @@
                     nextInput.select();
                 }
             }
-        }
 
-        function jumpNextElement(input) {
-            console.log(sdf);
+            input.selectionEnd = input.value.length - inputLenght + selectionEnd;
+            input.selectionStart = input.selectionEnd;
         }
 
         function separateDigits(value) {
