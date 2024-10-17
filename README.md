@@ -29,6 +29,10 @@ Types:
   - backjump: jump previous input if press `Backspace` and input was empty
   - jump: jump next input of press `Enter` and prevent submit event
 
+  - .farsi: validate format to farsi before form submit
+  - .english: validate format to farsi before form english
+  - .arabic: validate format to farsi before form arabic
+  - .noseparate: remove separates for specified inputs before form submit
 attributes:
   - max length: if input text characters reach to 10 it will focus on next input if exists
   - allowed: set allowed characters for 
