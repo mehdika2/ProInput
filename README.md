@@ -9,7 +9,8 @@
 3. Focus on next input on `Enter` key press.
 4. Focus on previous input on `Backspace` key press if input was empty.
 5. Separate three digits numbers.
-
+6. Validate inputs on page load to specified format.
+7. Validate inputs before form submit to specified format.
 
 #### Usage:
 
