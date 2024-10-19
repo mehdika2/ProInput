@@ -95,8 +95,8 @@
 
             if (input.hasAttribute(imaxlength) &&
                 (findAttribute(input, "separate")
-                    ? input.value.replaceAll(',', '').length >= Number(input.getAttribute(imaxlength))
-                    : input.value.length >= Number(input.getAttribute(imaxlength)))) {
+                    ? input.value.replaceAll(',', '').length > Number(input.getAttribute(imaxlength))
+                : input.value.length > Number(input.getAttribute(imaxlength)))) {
                 input.value = input.value.substring(0, input.value.length - 1);
                 const nextInput = inputs[input.tabIndex];
                 if (nextInput) {
