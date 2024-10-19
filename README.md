@@ -51,7 +51,7 @@ Initialize:
 
 Example:
 ``` html
-<input type="text" id="Name" name="Age" data-pi-type="number english jump" data-pi-max-length="32" />
-<input type="text" id="Age" name="Age" data-pi-type="onlynumber farsi jump backjump" data-pi-max-length="3" />
-<input type="text" id="Salary" name="Age" data-pi-type="onlynumber farsi separate backjump .english .noseparate" data-pi-max-length="9" />
+<input type="text" id="Name" data-pi-type="number english jump" data-pi-max-length="32" />
+<input type="number" id="Age" data-pi-type="onlynumber farsi jump backjump" data-pi-max-length="3" />
+<input type="tel" id="Salary" data-pi-type="onlynumber farsi separate backjump .english .noseparate" data-pi-max-length="9" />
 ```
