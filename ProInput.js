@@ -53,21 +53,30 @@
                     }
                     if (findAttribute(input, "jump") && (event.key === 'Enter' || event.keyCode === 13)) {
                         event.preventDefault();
-                        const nextInput = inputs[index + 1];
-                        if (nextInput) {
-                            nextInput.focus();
-                        } else {
-                            if (typeof onLastInputEnter === 'function')
-                                if (onLastInputEnter() == false)
-                                    form.submit();
-                                else {
-                                    if (form)
-                                        form.submit();
-                                }
-                        }
+                        jumpNextElement(form, index);
                     }
                 });
         });
+
+        function jumpNextElement(form, index) {
+            const nextInput = inputs[index + 1];
+            if (nextInput) {
+                const style = window.getComputedStyle(nextInput);;
+                if (style.display === "none" || style.visibility === "hidden" || style.opacity === "0" || nextInput.type == "hidden") {
+                    jumpNextElement(form, index + 1);
+                    return;
+                }
+                nextInput.focus();
+            }
+            else {
+                if (typeof onLastInputEnter === 'function') {
+                    if (onLastInputEnter() == false)
+                        form.submit();
+                }
+                else if (form)
+                    form.submit();
+            }
+        }
 
         function formatOnlyNumberInput(event) {
             let input = event.target;
@@ -96,7 +105,7 @@
             if (input.hasAttribute(imaxlength) &&
                 (findAttribute(input, "separate")
                     ? input.value.replaceAll(',', '').length > Number(input.getAttribute(imaxlength))
-                : input.value.length > Number(input.getAttribute(imaxlength)))) {
+                    : input.value.length > Number(input.getAttribute(imaxlength)))) {
                 input.value = input.value.substring(0, input.value.length - 1);
                 const nextInput = inputs[input.tabIndex];
                 if (nextInput) {
