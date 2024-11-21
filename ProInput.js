@@ -58,6 +58,14 @@
                 });
         });
 
+        eventedForms.forEach(function (form) {
+            form.addEventListener("submit", event => {
+                toPersionNumber(form);
+                toEnglishNumber(form);
+                toArabicNumber(form);
+            });
+        });
+
         function jumpNextElement(form, index) {
             const nextInput = inputs[index + 1];
             if (nextInput) {
