@@ -110,11 +110,11 @@
             else if (findAttribute(input, "english"))
                 toEnglishNumber(input);
 
-            if (findAttribute(input, "separate"))
+            if (findAttribute(input, "separator"))
                 input.value = separateDigits(input.value);
 
             if (input.hasAttribute(imaxlength) &&
-                (findAttribute(input, "separate")
+                (findAttribute(input, "separator")
                     ? input.value.replaceAll(',', '').length > Number(input.getAttribute(imaxlength))
                     : input.value.length > Number(input.getAttribute(imaxlength)))) {
                 input.value = input.value.substring(0, input.value.length - 1);
